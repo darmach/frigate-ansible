@@ -1,0 +1,28 @@
+---
+- name: Include vars
+  hosts: servers
+  tasks:
+    - include_vars: vars.yml
+
+- name: Deploy sudo
+  import_playbook: sudo.yml
+
+- name: Configure host os
+  hosts: servers
+  become: True
+  tasks:
+    - import_tasks: os-configure.yml
+
+- name: Configure passtrough for Google Coral and AMD iGPU
+  hosts: servers
+  become: True
+  tasks:
+    - import_tasks: os-passtrough.yml
+  handlers:
+    - name: Reboot
+      reboot:
+
+- name: Deploy frigate
+  hosts: servers
+  tasks:
+  - import_tasks: frigate.yml

@@ -1,0 +1,48 @@
+---
+  - name: Update and upgrade apt packages
+    apt:
+      upgrade: yes
+      update_cache: yes
+
+  - name: Install packages
+    apt:
+      pkg:
+        - vim
+        - ca-certificates
+        - curl
+        - isenkram
+        - gnupg2
+  # - name: Check if docker key exists
+  #   stat:
+  #     path: /etc/apt/keyrings/docker.asc
+  #   register: docker_key
+  # - name: Download docker repo signature
+  #   get_url:
+  #     url: https://download.docker.com/linux/debian/gpg
+  #     dest: /etc/apt/keyrings/docker.asc
+  #     mode: 0644
+  #     force: true
+  #   when: not docker_key.stat.exists
+  - name: Add the docker repo key
+    ansible.builtin.apt_key:
+      url: https://download.docker.com/linux/debian/gpg
+      state: present
+
+  - name: Add docker apt repository
+    apt_repository:
+      # repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable"
+      repo: "deb [arch=amd64] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable"
+      state: present
+      update_cache: yes
+      filename: docker
+
+  - name: Install docker
+    apt:
+      name: docker-ce
+      state: present
+
+  - name: Add {{ user }} user to docker group
+    user:
+      name: '{{ user }}'
+      groups: docker
+      append: yes

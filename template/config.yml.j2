@@ -1,0 +1,107 @@
+mqtt:
+  enabled: True
+  host: "{{ mqtt_host }}"
+  user: "{{ mqtt_user}}"
+  password: "{{ mqtt_password }}"
+
+detectors:
+  coral:
+    type: edgetpu
+    device: pci
+
+detect:
+  enabled: True
+  fps: 25
+
+objects:
+  track:
+    - person
+    - cat
+    - bird
+    - dog
+    - car
+
+record:
+  enabled: True
+
+birdseye:
+  enabled: True
+  mode: continuous
+  width: 2560
+  height: 1440
+  quality: 1
+
+go2rtc:
+  streams:
+    cam1:
+      - rtsp://192.168.1.101:554/live0.264
+    cam2:
+      - rtsp://192.168.1.102:554/live0.264
+    cam3:
+      - rtsp://192.168.1.103:554/live0.264
+    cam4:
+      - rtsp://192.168.1.104:554/live0.264
+
+# Optional: jsmpeg stream configuration for WebUI
+live:
+  height: 1080
+  quality: 1
+
+cameras:
+  cam1:
+    enabled: True
+    ffmpeg:
+      hwaccel_args: preset-vaapi
+      inputs:
+        - path: rtsp://127.0.0.1:8554/cam1
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+            - record
+    motion:
+      mask:
+        - 1440,0,1920,0,1920,64,1440,64
+  cam2:
+    enabled: True
+    ffmpeg:
+      hwaccel_args: preset-vaapi
+      inputs:
+        - path: rtsp://127.0.0.1:8554/cam2
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+            - record
+    motion:
+      mask:
+        - 1440,0,1920,0,1920,64,1440,64
+  cam3:
+    enabled: True
+    ffmpeg:
+      hwaccel_args: preset-vaapi
+      inputs:
+        - path: rtsp://127.0.0.1:8554/cam3
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+            - record
+    motion:
+      mask:
+        - 1440,0,1920,0,1920,64,1440,64
+  cam4:
+    enabled: True
+    ffmpeg:
+      hwaccel_args: preset-vaapi
+      inputs:
+        - path: rtsp://127.0.0.1:8554/cam4
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+            - record
+    objects:
+      track:
+        - person
+        - cat
+        - dog
+    motion:
+      mask:
+        - 1440,0,1920,0,1920,64,1440,64

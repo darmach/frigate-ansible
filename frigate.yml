@@ -1,0 +1,29 @@
+---
+  - name: Create directories
+    become: True
+    file:
+      path: "{{ item }}"
+      state: directory
+      owner: "{{ user }}"
+      mode: "0700"
+    loop:
+      - /var/lib/frigate
+      - /var/lib/frigate/config
+      - /var/lib/frigate/storage
+
+  - name: Template files
+    template:
+      src: "{{ item.key }}"
+      dest: "{{ item.value }}"
+    with_dict:
+      "template/config.yml.j2": "/var/lib/frigate/config/config.yml"
+      "template/docker-compose.yml.j2": "/var/lib/frigate/docker-compose.yml"
+
+  - name: Run docker compose up
+    community.docker.docker_compose_v2:
+      project_src: /var/lib/frigate
+    register: output
+
+  - name: Show results
+    ansible.builtin.debug:
+      var: output.actions

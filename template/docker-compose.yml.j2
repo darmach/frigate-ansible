@@ -1,0 +1,26 @@
+services:
+  frigate:
+    #user: root
+    #privileged: true
+    #cap_add:
+    #  - CAP_PERFMON
+    environment:
+      LIBVA_DRIVER_NAME: "radeonsi"
+    container_name: frigate
+    restart: unless-stopped
+    # image: ghcr.io/blakeblackshear/frigate:stable
+    image: ghcr.io/blakeblackshear/frigate:0.14.0-rc1
+    shm_size: "256mb"
+    volumes:
+      - ./config:/config
+      - ./storage:/media/frigate
+      - type: tmpfs # Optional: 1GB of memory, reduces SSD/SD Card wear
+        target: /tmp/cache
+        tmpfs:
+          size: 1000000000
+    ports:
+      - "5000:5000"
+      - "8554:8554" # RTSP feeds
+    devices:
+      - /dev/apex_0:/dev/apex_0 # passes a PCIe Coral, follow driver instructions here https://coral.ai/docs/m2/get-started/#2a-on-linux
+      - /dev/dri/renderD128

@@ -1,0 +1,52 @@
+---
+  - name: Add the Google repo key
+    apt_key:
+      url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+      state: present
+
+  - name: Install Google Coral apt repository
+    apt_repository:
+      repo: "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main"
+      state: present
+      update_cache: yes
+      filename: docker
+
+  - name: Install Coral packages
+    apt:
+      pkg:
+        - gasket-dkms
+        - libedgetpu1-std
+
+  - name: Add udev rule for Coral permissions
+    copy:
+      dest: "/etc/udev/rules.d/65-apex.rules"
+      content: "{{ 'SUBSYSTEM==\"apex\", MODE=\"0660\", GROUP=\"apex\"' + '\n' }}"
+    notify:
+      - Reboot
+
+  - name: Ensure apex group exists
+    group:
+      name: apex
+      state: present
+    notify:
+      - Reboot
+
+  - name: Create "{{ user }}" user
+    user:
+      name: "{{ user }}"
+      groups: apex
+      append: True
+    notify:
+      - Reboot
+
+  - name: Install packages
+    apt:
+      pkg:
+        - firmware-amd-graphics
+        # not sure if we REALLY need those if we want just the GPU to do hardware decoding
+        - libgl1-mesa-dri
+        - libglx-mesa0
+        - mesa-vulkan-drivers
+        - xserver-xorg-video-all
+    notify:
+      - Reboot

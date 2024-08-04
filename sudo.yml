@@ -1,0 +1,20 @@
+---
+- name: Install and configure sudo
+  hosts: servers
+  become: True
+  become_method: su
+  vars:
+    ansible_become_password: "{{ root_password }}"
+
+  tasks:
+    - name: Install the sudo package
+      apt:
+        name: sudo
+        state: present
+
+    - name: Allow user {{ user }} to sudo
+      community.general.sudoers:
+        name: "{{ user }}-sudo"
+        state: present
+        user: "{{ user }}"
+        commands: ALL
