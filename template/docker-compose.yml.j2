@@ -5,9 +5,10 @@ services:
     #cap_add:
     #  - CAP_PERFMON
     environment:
+      TZ: Europe/Warsaw
       LIBVA_DRIVER_NAME: "radeonsi"
     container_name: frigate
-    restart: unless-stopped
+    restart: always
     # image: ghcr.io/blakeblackshear/frigate:stable
     image: ghcr.io/blakeblackshear/frigate:0.14.0-rc1
     shm_size: "256mb"

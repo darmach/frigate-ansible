@@ -1,8 +1,11 @@
 mqtt:
-  enabled: True
+  enabled: true
   host: "{{ mqtt_host }}"
   user: "{{ mqtt_user}}"
   password: "{{ mqtt_password }}"
+
+ui:
+  time_format: 24hour
 
 detectors:
   coral:
@@ -10,8 +13,14 @@ detectors:
     device: pci
 
 detect:
-  enabled: True
-  fps: 25
+  enabled: true
+  fps: 10
+
+# model:
+#   path: /config/mobilenet_v2/1.tflite
+#   labelmap_path: /config/mobilenet_v2/imagenet_labels.txt
+#   width: 224
+#   height: 224
 
 objects:
   track:
@@ -22,14 +31,25 @@ objects:
     - car
 
 record:
-  enabled: True
+  enabled: true
+  retain:
+    days: 2
+    mode: active_objects
+  # events:
+  #   retain:
+  #     default: 10
+  #     mode: motion
 
 birdseye:
-  enabled: True
+  enabled: true
   mode: continuous
   width: 2560
   height: 1440
   quality: 1
+
+snapshots:
+  enabled: true
+  bounding_box: true
 
 go2rtc:
   streams:
@@ -49,7 +69,7 @@ live:
 
 cameras:
   cam1:
-    enabled: True
+    enabled: true
     ffmpeg:
       hwaccel_args: preset-vaapi
       inputs:
@@ -59,10 +79,9 @@ cameras:
             - detect
             - record
     motion:
-      mask:
-        - 1440,0,1920,0,1920,64,1440,64
+      mask: 0.75,0,1,0,1,0.048,0.75,0.046
   cam2:
-    enabled: True
+    enabled: true
     ffmpeg:
       hwaccel_args: preset-vaapi
       inputs:
@@ -72,10 +91,27 @@ cameras:
             - detect
             - record
     motion:
-      mask:
-        - 1440,0,1920,0,1920,64,1440,64
+      mask: 0.75,0,1,0,1,0.048,0.75,0.046
+      threshold: 30
+      contour_area: 31
+    zones:
+      Parcel:
+        coordinates: 0,0.437,0.922,0.392,0.94,0.312,1,0.326,1,0.96,0.979,1,0,0.998
+        loitering_time: 0
+        inertia: 3
+      Street:
+        coordinates: 0,0.42,0.918,0.38,0.935,0.304,0.659,0.247,0.402,0.237,0.167,0.248,0,0.277
+        loitering_time: 0
+        inertia: 3
+      Sidewalk:
+        coordinates: 0,0,1,0,1,0.316,0.857,0.278,0.674,0.244,0.414,0.23,0.198,0.236,0,0.266
+        loitering_time: 0
+        inertia: 3
+    review:
+      alerts:
+        required_zones: Parcel
   cam3:
-    enabled: True
+    enabled: true
     ffmpeg:
       hwaccel_args: preset-vaapi
       inputs:
@@ -84,11 +120,32 @@ cameras:
           roles:
             - detect
             - record
+    objects:
+      track:
+        - person
+        - cat
+        - dog
+        - bird
     motion:
       mask:
-        - 1440,0,1920,0,1920,64,1440,64
+        - 0.75,0,1,0,1,0.048,0.75,0.046
+        - 0.619,0.078,0.615,0.096,0.63,0.096,0.631,0.077
+    zones:
+      Backyard:
+        coordinates:
+          0.052,0.463,0.186,0.4,0.267,0.42,0.924,0.461,1,0.636,1,1,0.114,1,0.054,0.778,0.015,0.509
+        loitering_time: 0
+      Tomek:
+        coordinates:
+          0.253,0.362,0.476,0.297,0.476,0.216,0.513,0.101,0.781,0.105,0.796,0.23,0.789,0.317,0.834,0.323,0.924,0.457,0.286,0.402
+        loitering_time: 0
+    review:
+      alerts:
+        required_zones:
+          - Backyard
+          - Tomek
   cam4:
-    enabled: True
+    enabled: true
     ffmpeg:
       hwaccel_args: preset-vaapi
       inputs:
@@ -103,5 +160,5 @@ cameras:
         - cat
         - dog
     motion:
-      mask:
-        - 1440,0,1920,0,1920,64,1440,64
+      mask: 0.75,0,1,0,1,0.048,0.75,0.046
+version: 0.14
