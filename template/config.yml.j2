@@ -93,10 +93,11 @@ cameras:
     motion:
       mask: 0.75,0,1,0,1,0.048,0.75,0.046
       threshold: 30
-      contour_area: 31
+      contour_area: 25
+      improve_contrast: 'true'
     zones:
       Parcel:
-        coordinates: 0,0.437,0.922,0.392,0.94,0.312,1,0.326,1,0.96,0.979,1,0,0.998
+        coordinates: 0,0.543,0.975,0.468,0.985,0.438,1,0.409,1,0.96,0.979,1,0,0.998
         loitering_time: 0
         inertia: 3
       Street:
@@ -130,20 +131,25 @@ cameras:
       mask:
         - 0.75,0,1,0,1,0.048,0.75,0.046
         - 0.619,0.078,0.615,0.096,0.63,0.096,0.631,0.077
+      threshold: 25
+      contour_area: 10
+      improve_contrast: 'true'
     zones:
       Backyard:
         coordinates:
-          0.052,0.463,0.186,0.4,0.267,0.42,0.924,0.461,1,0.636,1,1,0.114,1,0.054,0.778,0.015,0.509
+          0.052,0.463,0.186,0.4,0.267,0.42,0.924,0.472,1,0.636,1,1,0.114,1,0.054,0.778,0.015,0.509
         loitering_time: 0
-      Tomek:
+        inertia: 3
+      Neighbours:
         coordinates:
-          0.253,0.362,0.476,0.297,0.476,0.216,0.513,0.101,0.781,0.105,0.796,0.23,0.789,0.317,0.834,0.323,0.924,0.457,0.286,0.402
+          0.279,0.359,0.476,0.297,0.476,0.216,0.513,0.101,0.781,0.105,0.796,0.23,0.794,0.301,0.831,0.302,0.924,0.457,0.275,0.402
         loitering_time: 0
+        inertia: 3
     review:
       alerts:
         required_zones:
           - Backyard
-          - Tomek
+          - Neighbours
   cam4:
     enabled: true
     ffmpeg:
@@ -162,3 +168,12 @@ cameras:
     motion:
       mask: 0.75,0,1,0,1,0.048,0.75,0.046
 version: 0.14
+camera_groups:
+  Pulse:
+    order: 1
+    icon: LuActivity
+    cameras:
+      - cam1
+      - cam2
+      - cam3
+      - cam4

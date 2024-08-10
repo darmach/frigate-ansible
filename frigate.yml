@@ -18,12 +18,24 @@
     with_dict:
       "template/config.yml.j2": "/var/lib/frigate/config/config.yml"
       "template/docker-compose.yml.j2": "/var/lib/frigate/docker-compose.yml"
+    register: templates
 
-  - name: Run docker compose up
-    community.docker.docker_compose_v2:
-      project_src: /var/lib/frigate
-    register: output
+  - name: Restard frigate container
+    community.docker.docker_container:
+      name: frigate
+      restart: true
+    when: templates.results[0].changed and not templates.results[1].changed
 
-  - name: Show results
-    ansible.builtin.debug:
-      var: output.actions
+
+  - name: Docker compose
+    block:
+      - name: Run docker compose up
+        community.docker.docker_compose_v2:
+          project_src: /var/lib/frigate
+        register: output
+
+      - name: Show results
+        ansible.builtin.debug:
+          var: output.actions
+
+    when: templates.results[1].changed
