@@ -34,18 +34,17 @@ record:
   enabled: true
   retain:
     days: 2
-    mode: active_objects
-  # events:
+    mode: all
+  preview:
+    # Optional: Quality of recording preview (default: medium).
+    # Options are: very_low, low, medium, high, very_high
+    quality: high
+  events:
+    pre_capture: 10
+    post_capture: 10
   #   retain:
   #     default: 10
   #     mode: motion
-
-birdseye:
-  enabled: true
-  mode: continuous
-  width: 2560
-  height: 1440
-  quality: 1
 
 snapshots:
   enabled: true
@@ -63,9 +62,16 @@ go2rtc:
       - rtsp://192.168.1.104:554/live0.264
 
 # Optional: jsmpeg stream configuration for WebUI
-live:
-  height: 1080
-  quality: 1
+# live:
+#   height: 1080
+#   quality: 1
+
+# birdseye:
+#   enabled: true
+#   mode: continuous
+#   width: 2560
+#   height: 1440
+#   quality: 1
 
 cameras:
   cam1:
@@ -74,6 +80,7 @@ cameras:
       hwaccel_args: preset-vaapi
       inputs:
         - path: rtsp://127.0.0.1:8554/cam1
+        # - path: rtsp://192.168.1.101:554/live1.264
           input_args: preset-rtsp-restream
           roles:
             - detect
@@ -86,6 +93,7 @@ cameras:
       hwaccel_args: preset-vaapi
       inputs:
         - path: rtsp://127.0.0.1:8554/cam2
+        # - path: rtsp://192.168.1.102:554/live1.264
           input_args: preset-rtsp-restream
           roles:
             - detect
@@ -117,6 +125,7 @@ cameras:
       hwaccel_args: preset-vaapi
       inputs:
         - path: rtsp://127.0.0.1:8554/cam3
+        # - path: rtsp://192.168.1.103:554/live1.264
           input_args: preset-rtsp-restream
           roles:
             - detect
@@ -130,8 +139,8 @@ cameras:
     motion:
       mask:
         - 0.75,0,1,0,1,0.048,0.75,0.046
-        - 0.619,0.078,0.615,0.096,0.63,0.096,0.631,0.077
-      threshold: 25
+        - 0.619,0.078,0.616,0.1,0.632,0.1,0.631,0.077
+      threshold: 20
       contour_area: 10
       improve_contrast: 'true'
     zones:
@@ -156,6 +165,7 @@ cameras:
       hwaccel_args: preset-vaapi
       inputs:
         - path: rtsp://127.0.0.1:8554/cam4
+        # - path: rtsp://192.168.1.104:554/live1.264
           input_args: preset-rtsp-restream
           roles:
             - detect
@@ -177,3 +187,7 @@ camera_groups:
       - cam2
       - cam3
       - cam4
+  Birdseye:
+    order: 2
+    icon: LuEye
+    cameras: birdseye
