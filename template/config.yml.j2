@@ -29,11 +29,13 @@ objects:
     - bird
     - dog
     - car
+    - bicycle
+    - motorcycle
 
 record:
   enabled: true
   retain:
-    days: 2
+    days: 4
     mode: all
   preview:
     # Optional: Quality of recording preview (default: medium).
@@ -65,7 +67,6 @@ go2rtc:
 # live:
 #   height: 1080
 #   quality: 1
-
 # birdseye:
 #   enabled: true
 #   mode: continuous
@@ -101,11 +102,12 @@ cameras:
     motion:
       mask: 0.75,0,1,0,1,0.048,0.75,0.046
       threshold: 30
-      contour_area: 25
+      contour_area: 10
       improve_contrast: 'true'
     zones:
       Parcel:
-        coordinates: 0,0.543,0.975,0.468,0.985,0.438,1,0.409,1,0.96,0.979,1,0,0.998
+        coordinates:
+          0,0.448,0.221,0.433,0.24,0.527,0.975,0.468,0.985,0.438,1,0.409,1,0.96,0.979,1,0,0.998
         loitering_time: 0
         inertia: 3
       Street:
