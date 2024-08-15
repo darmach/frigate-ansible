@@ -3,3 +3,9 @@ root_password: "your_host_root_password"
 mqtt_user: "your_mqtt_user"
 mqtt_host: "your_mqtt_address"
 mqtt_password: "your_mqtt_password"
+# Example - creates a logical volume on `storage.device` and
+# mounts it under "/var/lib/frigate/storage"
+# mounts:
+#   storage:
+#     device: "/dev/sdb"
+#     fstype: ext4

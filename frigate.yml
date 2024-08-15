@@ -11,6 +11,39 @@
       - /var/lib/frigate/config
       - /var/lib/frigate/storage
 
+  - name: Prepare storage
+    become: True
+    block:
+    - name: Create a volume group  on "{{ item.value.device }}"
+      lvg:
+        vg: "frigate"
+        pvs: "{{ item.value.device }}"
+      with_dict: "{{ mounts }}"
+
+    - name: Create a logical volume for frigate
+      lvol:
+        vg: "frigate"
+        lv: "{{ item.key }}"
+        size: "100%FREE"
+        shrink: False
+      with_dict: "{{ mounts }}"
+
+    - name: Create a filesystem
+      filesystem:
+        fstype: "{{ item.value.fstype }}"
+        dev: "/dev/frigate/{{ item.key }}"
+      with_dict: "{{ mounts }}"
+
+    - name: Mount storage
+      mount:
+        path: "/var/lib/frigate/{{ item.key }}"
+        src: "/dev/frigate/{{ item.key }}"
+        fstype: "{{ item.value.fstype }}"
+        state: mounted
+      with_dict: "{{ mounts }}"
+
+    when: mounts is defined
+
   - name: Template files
     template:
       src: "{{ item.key }}"
@@ -20,7 +53,7 @@
       "template/docker-compose.yml.j2": "/var/lib/frigate/docker-compose.yml"
     register: templates
 
-  - name: Restard frigate container
+  - name: Restart frigate container
     community.docker.docker_container:
       name: frigate
       restart: true
