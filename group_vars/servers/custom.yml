@@ -1,0 +1,10 @@
+# Variables in this file will override the defaults in group_vars/all
+# Example - override user and sudo password
+# user: "ubuntu"
+# root_password: "sosecuremuchwow"
+# Example - creates a logical volume on `storage.device` and
+# mounts it under "/var/lib/frigate/storage"
+# mounts:
+#   storage:
+#     device: "/dev/sdb"
+#     fstype: ext4

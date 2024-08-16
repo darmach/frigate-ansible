@@ -21,7 +21,6 @@
     copy:
       dest: "/etc/udev/rules.d/65-apex.rules"
       content: "{{ 'SUBSYSTEM==\"apex\", MODE=\"0660\", GROUP=\"apex\"' + '\n' }}"
-      mode: 0644
     notify:
       - Reboot
 
