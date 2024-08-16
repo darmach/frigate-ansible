@@ -1,0 +1,5 @@
+user: "your_host_username"
+root_password: "your_host_root_password"
+mqtt_user: "your_mqtt_user"
+mqtt_host: "your_mqtt_address"
+mqtt_password: "your_mqtt_password"

@@ -1,9 +1,4 @@
 ---
-- name: Include vars
-  hosts: servers
-  tasks:
-    - include_vars: vars.yml
-
 - name: Deploy sudo
   import_playbook: sudo.yml
 
