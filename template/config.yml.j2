@@ -35,12 +35,12 @@ objects:
 record:
   enabled: true
   retain:
-    days: 4
+    days: 2
     mode: all
   preview:
     # Optional: Quality of recording preview (default: medium).
     # Options are: very_low, low, medium, high, very_high
-    quality: high
+    quality: very_high
   events:
     pre_capture: 10
     post_capture: 10
@@ -55,13 +55,15 @@ snapshots:
 go2rtc:
   streams:
     cam1:
-      - rtsp://192.168.1.101:554/live0.264
+      - "rtsp://admin:{{ admin_password }}@192.168.1.101:554/live0.264"
     cam2:
-      - rtsp://192.168.1.102:554/live0.264
+      - "rtsp://admin:{{ admin_password }}@192.168.1.102:554/live0.264"
     cam3:
-      - rtsp://192.168.1.103:554/live0.264
+      - "rtsp://admin:{{ admin_password }}@192.168.1.103:554/live0.264"
     cam4:
-      - rtsp://192.168.1.104:554/live0.264
+      - "rtsp://admin:{{ admin_password }}@192.168.1.104:554/live0.264"
+    cam5:
+      - "rtsp://admin:{{ admin_password }}@192.168.1.105:554/live0.264"
 
 # Optional: jsmpeg stream configuration for WebUI
 # live:
@@ -81,11 +83,18 @@ cameras:
       hwaccel_args: preset-vaapi
       inputs:
         - path: rtsp://127.0.0.1:8554/cam1
-        # - path: rtsp://192.168.1.101:554/live1.264
           input_args: preset-rtsp-restream
           roles:
-            - detect
             - record
+        - path: rtsp://admin:{{ admin_password }}@192.168.1.101:554/live1.264
+          roles:
+            - detect
+    objects:
+      track:
+        - person
+        - cat
+        - dog
+        - bird
     motion:
       mask: 0.75,0,1,0,1,0.048,0.75,0.046
   cam2:
@@ -94,11 +103,12 @@ cameras:
       hwaccel_args: preset-vaapi
       inputs:
         - path: rtsp://127.0.0.1:8554/cam2
-        # - path: rtsp://192.168.1.102:554/live1.264
           input_args: preset-rtsp-restream
           roles:
-            - detect
             - record
+        - path: rtsp://admin:{{ admin_password }}@192.168.1.102:554/live1.264
+          roles:
+            - detect
     motion:
       mask: 0.75,0,1,0,1,0.048,0.75,0.046
       threshold: 30
@@ -127,11 +137,12 @@ cameras:
       hwaccel_args: preset-vaapi
       inputs:
         - path: rtsp://127.0.0.1:8554/cam3
-        # - path: rtsp://192.168.1.103:554/live1.264
           input_args: preset-rtsp-restream
           roles:
-            - detect
             - record
+        - path: rtsp://admin:{{ admin_password }}@192.168.1.103:554/live1.264
+          roles:
+            - detect
     objects:
       track:
         - person
@@ -167,11 +178,40 @@ cameras:
       hwaccel_args: preset-vaapi
       inputs:
         - path: rtsp://127.0.0.1:8554/cam4
-        # - path: rtsp://192.168.1.104:554/live1.264
           input_args: preset-rtsp-restream
           roles:
-            - detect
             - record
+        - path: rtsp://admin:{{ admin_password }}@192.168.1.104:554/live1.264
+          roles:
+            - detect
+    objects:
+      track:
+        - person
+        - cat
+        - dog
+    motion:
+      mask: 0.75,0,1,0,1,0.048,0.75,0.046
+  cam5:
+    enabled: true
+    ffmpeg:
+      hwaccel_args: preset-vaapi
+      inputs:
+        - path: rtsp://127.0.0.1:8554/cam5
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: "rtsp://192.168.1.105:554/user=admin_password={{ admin_password }}_channel=1_stream=1&onvif=0.sdp?real_stream"
+          roles:
+            - detect
+    onvif:
+      host: 192.168.1.105
+      port: 8899
+      user: admin
+      password: tlJwpbo6
+      # autotracking:
+      #   enabled: True
+      #   required_zones:
+      #     - zone_name
     objects:
       track:
         - person
