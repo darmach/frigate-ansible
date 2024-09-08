@@ -55,15 +55,17 @@ snapshots:
 go2rtc:
   streams:
     cam1:
-      - "rtsp://admin:{{ admin_password }}@192.168.1.101:554/live0.264"
+      - rtsp://admin:{{ admin_password }}@192.168.1.101:554/live0.264
     cam2:
-      - "rtsp://admin:{{ admin_password }}@192.168.1.102:554/live0.264"
+      - rtsp://admin:{{ admin_password }}@192.168.1.102:554/live0.264
     cam3:
-      - "rtsp://admin:{{ admin_password }}@192.168.1.103:554/live0.264"
+      - rtsp://admin:{{ admin_password }}@192.168.1.103:554/live0.264
     cam4:
-      - "rtsp://admin:{{ admin_password }}@192.168.1.104:554/live0.264"
+      - rtsp://admin:{{ admin_password }}@192.168.1.104:554/live0.264
     cam5:
-      - "rtsp://admin:{{ admin_password }}@192.168.1.105:554/live0.264"
+      - rtsp://admin:{{ admin_password }}@192.168.1.105:554/live0.264
+    cam6:
+      - rtsp://admin:{{ admin_password }}@192.168.1.106:554/live0.264
 
 # Optional: jsmpeg stream configuration for WebUI
 # live:
@@ -203,7 +205,8 @@ cameras:
           input_args: preset-rtsp-restream
           roles:
             - record
-        - path: "rtsp://192.168.1.105:554/user=admin_password={{ admin_password }}_channel=1_stream=1&onvif=0.sdp?real_stream"
+        - path:
+            rtsp://192.168.1.105:554/user=admin_password={{ admin_password }}_channel=1_stream=1&onvif=0.sdp?real_stream
           roles:
             - detect
     onvif:
@@ -215,6 +218,26 @@ cameras:
       #   enabled: True
       #   required_zones:
       #     - zone_name
+    objects:
+      track:
+        - person
+        - cat
+        - dog
+    motion:
+      mask: 0.75,0,1,0,1,0.048,0.75,0.046
+  cam6:
+    enabled: true
+    ffmpeg:
+      hwaccel_args: preset-vaapi
+      inputs:
+        - path: rtsp://127.0.0.1:8554/cam6
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path:
+            rtsp://192.168.1.106:554/user=admin_password={{ admin_password }}_channel=1_stream=1&onvif=0.sdp?real_stream
+          roles:
+            - detect
     objects:
       track:
         - person
