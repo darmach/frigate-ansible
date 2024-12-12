@@ -66,6 +66,9 @@ go2rtc:
     #   - rtsp://admin:{{ admin_password }}@192.168.1.105:554/live0.264
     cam6:
       - rtsp://admin:{{ admin_password }}@192.168.1.106:554/live0.264
+  webrtc:
+    candidates:
+      - frigate:8555
 
 # Optional: jsmpeg stream configuration for WebUI
 # live:
