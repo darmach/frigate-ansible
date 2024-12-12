@@ -120,22 +120,21 @@ cameras:
       contour_area: 10
       improve_contrast: 'true'
     zones:
-      Parcel:
-        coordinates:
-          0,0.448,0.221,0.433,0.24,0.527,0.975,0.468,0.985,0.438,1,0.409,1,0.96,0.979,1,0,0.998
-        loitering_time: 0
-        inertia: 3
       Street:
-        coordinates: 0,0.42,0.918,0.38,0.935,0.304,0.659,0.247,0.402,0.237,0.167,0.248,0,0.277
+        coordinates: 0,0.344,0.972,0.385,0.989,0.33,0.753,0.236,0.42,0.167,0.198,0.165,0,0.178
         loitering_time: 0
         inertia: 3
       Sidewalk:
-        coordinates: 0,0,1,0,1,0.316,0.857,0.278,0.674,0.244,0.414,0.23,0.198,0.236,0,0.266
+        coordinates: 0,0,1,0,1,0.33,0.939,0.303,0.751,0.231,0.425,0.162,0.227,0.158,0,0.17
         loitering_time: 0
         inertia: 3
+      Front_yard:
+        coordinates: 0,0.438,0.266,0.45,1,0.447,1,0.96,0.979,1,0,0.998
+        inertia: 2
+        loitering_time: 0
     review:
       alerts:
-        required_zones: Parcel
+        required_zones: Front_yard
   cam3:
     enabled: true
     ffmpeg:
