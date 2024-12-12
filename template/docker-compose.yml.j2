@@ -9,8 +9,7 @@ services:
       LIBVA_DRIVER_NAME: "radeonsi"
     container_name: frigate
     restart: always
-    # image: ghcr.io/blakeblackshear/frigate:stable
-    image: ghcr.io/blakeblackshear/frigate:0.14.0
+    image: ghcr.io/blakeblackshear/frigate:0.14.1
     shm_size: "256mb"
     volumes:
       - ./config:/config
@@ -22,6 +21,8 @@ services:
     ports:
       - "5000:5000"
       - "8554:8554" # RTSP feeds
+      - "8555:8555/tcp" # WebRTC over tcp
+      - "8555:8555/udp" # WebRTC over udp
     devices:
       - /dev/apex_0:/dev/apex_0 # passes a PCIe Coral, follow driver instructions here https://coral.ai/docs/m2/get-started/#2a-on-linux
       - /dev/dri/renderD128
