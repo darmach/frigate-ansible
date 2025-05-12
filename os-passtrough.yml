@@ -9,7 +9,7 @@
       repo: "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main"
       state: present
       update_cache: yes
-      filename: docker
+      filename: coral-edgetpu
 
   - name: Install Coral packages
     apt:

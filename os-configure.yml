@@ -1,8 +1,9 @@
 ---
   - name: Update and upgrade apt packages
     apt:
-      upgrade: yes
+      upgrade: no
       update_cache: yes
+    when: apt_upgrade
 
   - name: Install packages
     apt:
@@ -30,8 +31,7 @@
 
   - name: Add docker apt repository
     apt_repository:
-      # repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable"
-      repo: "deb [arch=amd64] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable"
+      repo: "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} stable"
       state: present
       update_cache: yes
       filename: docker
@@ -46,3 +46,14 @@
       name: '{{ user }}'
       groups: docker
       append: yes
+
+  - name: Install Hetrix heartbeat monitor
+    ansible.builtin.cron:
+      name: "hetrixtools heartbeat monitor"
+      minute: "*/5"
+      hour: "*"
+      day: "*"
+      month: "*"
+      weekday: "*"
+      job: "/usr/bin/curl --retry 3 --retry-delay 1 -m 15 https://sm.hetrixtools.net/hb/?s={{ hetrix_token }} >/dev/null 2>&1"
+    when: hetrix_token is defined

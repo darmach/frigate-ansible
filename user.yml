@@ -1,0 +1,37 @@
+---
+- name: Add {{ user }} user
+  hosts: servers
+  become: True
+  remote_user: ubuntu
+
+  tasks:
+    - name: Add {{ user }} user
+      user:
+        name: "{{ user }}"
+        shell: /bin/bash
+        state: present
+
+    - name: Allow user {{ user }} to sudo
+      community.general.sudoers:
+        name: "{{ user }}-sudo"
+        state: present
+        user: "{{ user }}"
+        commands: ALL
+
+    - name: Set authorized key taken from file
+      ansible.posix.authorized_key:
+        user: "{{ user }}"
+        state: present
+        key: "{{ lookup('file', '~/.ssh/authorized_keys') }}"
+
+# - name: Remove ubuntu user
+#   hosts: servers
+#   become: True
+#   remote_user: "{{ user }}"
+
+#   tasks:
+#     - name: Remove the ubuntu user
+#       ansible.builtin.user:
+#         name: ubuntu
+#         state: absent
+#         remove: yes

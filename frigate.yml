@@ -41,11 +41,11 @@
         fstype: "{{ item.value.fstype }}"
         state: mounted
       with_dict: "{{ mounts }}"
-
     when: mounts is defined
 
   - name: Template files
     template:
+      backup: True
       src: "{{ item.key }}"
       dest: "{{ item.value }}"
     with_dict:
