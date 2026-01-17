@@ -191,25 +191,28 @@ cameras:
         required_zones:
           - Backyard
           - Neighbours
-  cam4:
-    enabled: true
-    ffmpeg:
-      hwaccel_args: preset-vaapi
-      inputs:
-        - path: rtsp://127.0.0.1:8554/cam4
-          input_args: preset-rtsp-restream
-          roles:
-            - record
-        - path: rtsp://admin:{{ admin_password }}@192.168.1.104:554/live1.264
-          roles:
-            - detect
-    objects:
-      track:
-        - person
-        - cat
-        - dog
-    motion:
-      mask: 0.75,0,1,0,1,0.048,0.75,0.046
+  # That's probably a black pinhole
+  # cam4:
+  #   enabled: true
+  #   ffmpeg:
+  #     hwaccel_args: preset-vaapi
+  #     inputs:
+  #       - path: rtsp://127.0.0.1:8554/cam4
+  #         input_args: preset-rtsp-restream
+  #         roles:
+  #           - record
+  #       - path: rtsp://admin:{{ admin_password }}@192.168.1.104:554/live1.264
+  #         roles:
+  #           - detect
+  #   objects:
+  #     track:
+  #       - person
+  #       - cat
+  #       - dog
+  #       - car
+  #   motion:
+  #     mask: 0.75,0,1,0,1,0.048,0.75,0.046
+  # Is this the white dome one?
   # cam5:
   #   enabled: true
   #   ffmpeg:
