@@ -67,6 +67,8 @@ go2rtc:
       - rtsp://admin:{{ admin_password }}@192.168.1.106:554/live0.264
     cam7:
       - rtsp://admin:{{ admin_password_2 }}@192.168.1.107:554/stream1
+    cam8:
+      - rtsp://admin:{{ admin_password }}@192.168.1.108:554/cam/realmonitor?channel=1&subtype=0
   webrtc:
     candidates:
       - frigate:8555
@@ -287,6 +289,31 @@ cameras:
         required_zones: Front_yard
     motion:
       mask: 0.796,0,0.798,0.054,1,0.056,1,0
+  cam8:
+    enabled: true
+    ffmpeg:
+      hwaccel_args: preset-vaapi
+      output_args:
+        record: preset-record-generic-audio-aac
+      inputs:
+        - path: rtsp://127.0.0.1:8554/cam8
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://admin:{{ admin_password }}@192.168.1.108:554/cam/realmonitor?channel=1&subtype=1
+          roles:
+            - detect
+    detect:
+      enabled: false
+      width: 854
+      height: 480
+    objects:
+      track:
+        - person
+        - cat
+        - dog
+    motion:
+      mask: 0.722,0.045,1,0.045,1,0,0.722,0
 version: 0.15-1
 camera_groups:
   Pulse:
