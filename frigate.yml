@@ -14,11 +14,19 @@
   - name: Prepare storage
     become: True
     block:
-    - name: Create a volume group  on "{{ item.value.device }}"
+    - name: Check if volume group exists
+      command: vgs frigate
+      register: vg_status
+      ignore_errors: true
+      changed_when: false
+
+    - name: Create a volume group on devices
       lvg:
         vg: "frigate"
-        pvs: "{{ item.value.device }}"
-      with_dict: "{{ mounts }}"
+        # Aggregates all devices into a single list so the VG uses all of them
+        pvs: "{{ mounts | dict2items | map(attribute='value.device') | list }}"
+      # Only attempts to create/modify VG if it doesn't exist
+      when: vg_status.rc != 0
 
     - name: Create a logical volume for frigate
       lvol:
@@ -32,6 +40,7 @@
       filesystem:
         fstype: "{{ item.value.fstype }}"
         dev: "/dev/frigate/{{ item.key }}"
+        resizefs: False
       with_dict: "{{ mounts }}"
 
     - name: Mount storage
