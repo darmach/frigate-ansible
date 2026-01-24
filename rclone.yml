@@ -1,0 +1,39 @@
+---
+  - name: Install rclone
+    apt:
+      name: rclone
+      state: present
+      update_cache: yes
+
+  - name: Ensure rclone config directory exists
+    file:
+      path: /root/.config/rclone
+      state: directory
+      mode: '0700'
+
+  - name: Template authenticated rclone.conf
+    template:
+      backup: True
+      src: "template/rclone.conf.j2"
+      dest: "/root/.config/rclone/rclone.conf"
+      mode: '0600'
+      owner: root
+      group: root
+
+  - name: Create cron job to sync every 15 minutes
+    cron:
+      name: "Backup Frigate exports to Google Drive"
+      minute: "*/1"
+      # copy instead of sync prevents deleting on remote
+      # --drive-use-trash=false prevents filling up GDrive trash on deletes
+      # --immutable prevents touching files on remote
+      # --size-only to lower cpu usage
+      # --tpslimit limits Google Drive API requests to prevent
+      job: >
+        /usr/bin/flock -n /tmp/frigate_rclone.lock
+        /usr/bin/rclone copy {{ source_dir }} {{ rclone_remote_name }}:{{ dest_path }}
+        --immutable
+        --size-only
+        --tpslimit 10
+        --log-level ERROR
+        --log-file=/var/log/rclone_sync.log

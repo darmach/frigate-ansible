@@ -21,3 +21,13 @@
   hosts: servers
   tasks:
   - import_tasks: frigate.yml
+
+- name: Google rclone sync
+  hosts: servers
+  become: True
+  tasks:
+    - import_tasks: rclone.yml
+  vars:
+    rclone_remote_name: "GoogleDrive"
+    source_dir: "/var/lib/frigate/storage/exports"
+    dest_path: "Videos/Monitoring"
